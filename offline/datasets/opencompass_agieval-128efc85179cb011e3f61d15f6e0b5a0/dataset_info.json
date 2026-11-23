@@ -1,0 +1,61 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "logiqa-zh",
+  "dataset_name": "agieval",
+  "dataset_size": 466794,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/opencompass/agieval@master/test/logiqa-zh.jsonl": {
+      "num_bytes": 517624,
+      "checksum": null
+    }
+  },
+  "download_size": 517624,
+  "features": {
+    "passage": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "options": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "List"
+    },
+    "label": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "other": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "explanation": {
+      "dtype": "null",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 984418,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 466794,
+      "num_examples": 651,
+      "dataset_name": "agieval"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

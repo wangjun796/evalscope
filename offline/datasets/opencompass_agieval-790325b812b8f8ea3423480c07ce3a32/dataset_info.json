@@ -1,0 +1,60 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "gaokao-mathcloze",
+  "dataset_name": "agieval",
+  "dataset_size": 26865,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/opencompass/agieval@master/test/gaokao-mathcloze.jsonl": {
+      "num_bytes": 39280,
+      "checksum": null
+    }
+  },
+  "download_size": 39280,
+  "features": {
+    "passage": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "options": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "label": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "other": {
+      "source": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    "explanation": {
+      "dtype": "null",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 66145,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 26865,
+      "num_examples": 118,
+      "dataset_name": "agieval"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

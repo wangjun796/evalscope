@@ -1,0 +1,68 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "math",
+  "dataset_name": "agieval",
+  "dataset_size": 763806,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/opencompass/agieval@master/test/math.jsonl": {
+      "num_bytes": 907609,
+      "checksum": null
+    }
+  },
+  "download_size": 907609,
+  "features": {
+    "passage": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "options": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "label": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "other": {
+      "solution": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "level": {
+        "dtype": "int64",
+        "_type": "Value"
+      },
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    "explanation": {
+      "dtype": "null",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 1671415,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 763806,
+      "num_examples": 1000,
+      "dataset_name": "agieval"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "lsat-lr",
+  "dataset_name": "agieval",
+  "dataset_size": 578214,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/opencompass/agieval@master/test/lsat-lr.jsonl": {
+      "num_bytes": 618086,
+      "checksum": null
+    }
+  },
+  "download_size": 618086,
+  "features": {
+    "passage": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "options": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "List"
+    },
+    "label": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "other": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "explanation": {
+      "dtype": "null",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 1196300,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 578214,
+      "num_examples": 510,
+      "dataset_name": "agieval"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

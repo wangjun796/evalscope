@@ -1,0 +1,63 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "gaokao-chinese",
+  "dataset_name": "agieval",
+  "dataset_size": 713031,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/opencompass/agieval@master/test/gaokao-chinese.jsonl": {
+      "num_bytes": 733715,
+      "checksum": null
+    }
+  },
+  "download_size": 733715,
+  "features": {
+    "passage": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "options": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "List"
+    },
+    "label": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "other": {
+      "source": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    "explanation": {
+      "dtype": "null",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 1446746,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 713031,
+      "num_examples": 246,
+      "dataset_name": "agieval"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

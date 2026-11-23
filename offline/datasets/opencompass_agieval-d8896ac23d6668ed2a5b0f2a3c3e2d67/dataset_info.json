@@ -1,0 +1,63 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "sat-en-without-passage",
+  "dataset_name": "agieval",
+  "dataset_size": 220110,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/opencompass/agieval@master/test/sat-en-without-passage.jsonl": {
+      "num_bytes": 239962,
+      "checksum": null
+    }
+  },
+  "download_size": 239962,
+  "features": {
+    "passage": {
+      "dtype": "null",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "options": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "List"
+    },
+    "label": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "other": {
+      "solution": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    "explanation": {
+      "dtype": "null",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 460072,
+  "splits": {
+    "test": {
+      "name": "test",
+      "num_bytes": 220110,
+      "num_examples": 206,
+      "dataset_name": "agieval"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
