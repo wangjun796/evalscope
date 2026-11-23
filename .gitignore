@@ -21,6 +21,7 @@ parts/
 sdist/
 var/
 wheels/
+!offline/wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -118,6 +119,8 @@ venv.bak/
 *.swp
 *.log
 *.tar.gz
+!offline/wheels/*.whl
+!offline/wheels/*.tar.gz
 source.sh
 tensorboard.sh
 .DS_Store

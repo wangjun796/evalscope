@@ -1,0 +1,26 @@
+# EvalScope offline eval against vLLM (OpenAI-compatible API) on the Ascend server.
+# Usage:
+#   python -c "import yaml; from evalscope import TaskConfig, run_task; run_task(TaskConfig(**yaml.safe_load(open('offline/example_eval_vllm.yaml', encoding='utf-8'))))"
+# Adjust api_url / model / dataset_dir to your environment.
+
+eval_type: openai_api
+# Ascend vLLM service address (vLLM default port 8000)
+api_url: http://<ASCEND_IP>:8000/v1/chat/completions
+# Must match vLLM --served-model-name
+model: qwen3.8
+model_id: qwen3.8
+
+datasets:
+  - gsm8k
+  # - mmlu          # full run is slow; use subset_list for selected subjects
+
+# Point to the directory that CONTAINS "datasets/" (i.e. the offline/ folder itself).
+# Prebuilt caches live in <dataset_dir>/datasets/<id>-<hash>; do not rename them.
+dataset_dir: ./offline
+
+limit: 5            # smoke test; remove for formal evaluation
+
+generation_config:
+  max_tokens: 2048
+  temperature: 0
+  timeout: 300      # seconds, per request; 128K-context requests can be slow

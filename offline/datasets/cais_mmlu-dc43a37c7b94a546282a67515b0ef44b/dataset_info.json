@@ -1,0 +1,58 @@
+{
+  "builder_name": "parquet",
+  "citation": "",
+  "config_name": "all",
+  "dataset_name": "mmlu",
+  "dataset_size": 125389,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/cais/mmlu@master/all/dev-00000-of-00001.parquet": {
+      "num_bytes": 76504,
+      "checksum": null
+    }
+  },
+  "download_size": 76504,
+  "features": {
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "subject": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "choices": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "List"
+    },
+    "answer": {
+      "names": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "_type": "ClassLabel"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 201893,
+  "splits": {
+    "dev": {
+      "name": "dev",
+      "num_bytes": 125389,
+      "num_examples": 285,
+      "dataset_name": "mmlu"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
