@@ -296,63 +296,85 @@ def _parse_multipart(raw: bytes, boundary: bytes) -> tuple[str, bytes]:
     return '', b''
 
 
-INDEX_HTML = r'''<!doctype html>
+INDEX_HTML = r'''
+<!doctype html>
 <html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arrow Viewer</title><style>
-:root{--bg:#f7f7f8;--card:#fff;--tx:#171717;--mut:#6b7280;--bd:#e4e4e7;--ac:#4b3fe3;--acbg:#f2f0ff;--mono:ui-monospace,Consolas,monospace}
-@media(prefers-color-scheme:dark){:root{--bg:#141416;--card:#1d1d20;--tx:#e7e7ea;--mut:#9ca3af;--bd:#2e2e33;--ac:#8b7ff5;--acbg:#241f4d}}
+:root{--bg:#f4f5fb;--card:#fff;--tx:#1c1c28;--mut:#666880;--bd:#e3e4f0;--ac:#4f46e5;--ac2:#0ea5b7;--acbg:#eef0ff;--grad:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#0ea5b7);--zebra:#f8f9fe;--hov:#eef2ff;--shadow:0 8px 24px rgba(60,60,140,.12);--mono:ui-monospace,Consolas,monospace}
+@media(prefers-color-scheme:dark){:root{--bg:#101014;--card:#1a1a22;--tx:#e8e8f0;--mut:#9a9cb0;--bd:#2c2c3a;--ac:#818cf8;--ac2:#2dd4bf;--acbg:#232347;--grad:linear-gradient(135deg,#312e81,#5b21b6 55%,#134e4a);--zebra:#1e1e28;--hov:#26263a;--shadow:0 8px 24px rgba(0,0,0,.5)}}
 *{box-sizing:border-box}body{margin:0;font:14px/1.5 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--tx)}
-header{padding:14px 20px;display:flex;gap:12px;align-items:center;border-bottom:1px solid var(--bd);background:var(--card);flex-wrap:wrap}
-header h1{font-size:16px;margin:0 12px 0 0}
-input[type=text]{flex:1;min-width:260px;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font-family:var(--mono);font-size:13px}
-button{padding:8px 14px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);cursor:pointer;font-size:13px}
-button.pri{background:var(--ac);border-color:var(--ac);color:#fff}
-button:hover{filter:brightness(.95)}
-main{padding:16px 20px}
-#drop{border:2px dashed var(--bd);border-radius:12px;padding:36px;text-align:center;color:var(--mut);margin-bottom:16px}
+header{padding:14px 22px;display:flex;gap:12px;align-items:center;background:var(--grad);color:#fff;box-shadow:var(--shadow)}
+header .logo{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:700}
+header h1{font-size:16px;margin:0 10px 0 0;font-weight:600}
+header .sub{font-size:12px;opacity:.75;margin-right:8px}
+input[type=text]{flex:1;min-width:240px;padding:9px 12px;border:1px solid transparent;border-radius:9px;background:rgba(255,255,255,.92);color:#1c1c28;font-family:var(--mono);font-size:13px}
+input[type=text]:focus{outline:2px solid #fff}
+header button{padding:9px 16px;border:none;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;background:#fff;color:#3730a3}
+header button.pri{background:#1c1c28;color:#fff}
+header button:hover{transform:translateY(-1px)}
+main{padding:18px 22px;max-width:1600px;margin:0 auto}
+#drop{border:2px dashed var(--bd);border-radius:14px;padding:40px;text-align:center;color:var(--mut);margin-bottom:16px;background:var(--card);transition:.15s}
 #drop.on{border-color:var(--ac);background:var(--acbg);color:var(--ac)}
 .hidden{display:none!important}
-#meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;color:var(--mut);font-size:13px}
-#meta b{color:var(--tx)}
-#schema{background:var(--card);border:1px solid var(--bd);border-radius:10px;margin-bottom:14px;overflow:auto}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:left}
-th{background:var(--card);position:sticky;top:0;font-weight:600;cursor:pointer;user-select:none;white-space:nowrap;z-index:2}
-td{font-family:var(--mono);white-space:normal;word-break:break-word;vertical-align:top;max-width:520px;line-height:1.5}
-td.rownum,th.rownum{width:44px;min-width:44px;color:var(--mut);text-align:right;position:sticky;left:0;background:var(--card);font-family:var(--font-sans)}
-#gridwrap{background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:auto;max-height:calc(100vh - 260px)}
-#pager{display:flex;gap:8px;align-items:center;margin-top:10px;color:var(--mut);font-size:13px}
+#meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:5px 14px;font-size:12.5px;color:var(--mut);box-shadow:var(--shadow)}
+.chip b{color:var(--tx);font-weight:600}
+.chip.path b{font-family:var(--mono);font-weight:500;word-break:break-all}
 #toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-#q{max-width:280px}
-#modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9}
-#modal .box{background:var(--card);border:1px solid var(--bd);border-radius:12px;max-width:min(900px,92vw);max-height:80vh;overflow:auto;padding:18px}
-#modal pre{margin:0;white-space:pre-wrap;word-break:break-all;font-family:var(--mono);font-size:13px}
-.err{color:#dc2626;margin:8px 0}
+#q{max-width:280px;padding:8px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--card);color:var(--tx);font-size:13px;min-width:auto}
+#qcol{padding:8px;border-radius:9px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+button{padding:8px 14px;border:1px solid var(--bd);border-radius:9px;background:var(--card);color:var(--tx);cursor:pointer;font-size:13px}
+button.pri{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+button:hover{filter:brightness(.96);border-color:var(--ac)}
+#schema{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:14px;overflow:auto}
+#schema summary{padding:9px 14px;cursor:pointer;font-weight:600;font-size:13px;color:var(--mut)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 12px;border-bottom:1px solid var(--bd);text-align:left}
+th{background:var(--acbg);position:sticky;top:0;font-weight:600;cursor:pointer;user-select:none;white-space:nowrap;z-index:2;color:var(--tx);border-bottom:2px solid var(--ac)}
+th:hover{color:var(--ac)}
+td{font-family:var(--mono);white-space:normal;word-break:break-word;vertical-align:top;max-width:520px;line-height:1.55}
+tbody tr:nth-child(even){background:var(--zebra)}
+tbody tr:hover{background:var(--hov)}
+td.rownum,th.rownum{width:48px;min-width:48px;color:var(--mut);text-align:right;position:sticky;left:0;background:var(--card);font-family:inherit;font-size:12px;z-index:1}
+th.rownum{background:var(--acbg);z-index:3}
+.badge{display:inline-block;font:600 11px/1.6 var(--mono);padding:1px 8px;border-radius:999px;background:var(--acbg);color:var(--ac);border:1px solid var(--bd)}
+#gridwrap{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:auto;max-height:calc(100vh - 300px);box-shadow:var(--shadow)}
+#pager{display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--mut);font-size:13px}
+#pager select{padding:6px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+#modal{position:fixed;inset:0;background:rgba(15,15,30,.55);display:flex;align-items:center;justify-content:center;z-index:9;backdrop-filter:blur(3px)}
+#modal .box{background:var(--card);border-radius:16px;width:min(1000px,94vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.35);overflow:hidden}
+#modal .mhead{padding:14px 20px;background:var(--grad);color:#fff;display:flex;align-items:center;gap:10px;font-weight:600}
+#modal .mhead .x{margin-left:auto;cursor:pointer;background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:8px;padding:4px 12px;font-size:13px}
+#modal .mbody{padding:16px 20px;overflow:auto}
+.field{margin-bottom:14px}
+.field .fname{font-size:12px;font-weight:700;color:var(--mut);letter-spacing:.4px;margin-bottom:5px;display:flex;gap:8px;align-items:center}
+.field .fval{border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:0 10px 10px 0;background:var(--zebra);padding:10px 14px;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:13px;line-height:1.6;max-height:40vh;overflow:auto}
+.err{color:#dc2626;margin:10px 0;font-size:13px}
 </style></head><body>
-<header><h1>Arrow Viewer</h1>
+<header><div class="logo">A</div><h1>Arrow Viewer</h1><span class="sub">本地数据工作台 · 数据不出机器</span>
 <input type="text" id="path" placeholder="本机路径：数据集目录 / data-00000-of-00001.arrow / .parquet / .csv ...">
 <button class="pri" onclick="openPath()">打开</button>
-<label><button onclick="document.getElementById('file').click()">选择文件</button></label>
+<button onclick="document.getElementById('file').click()">选择文件</button>
 <input type="file" id="file" class="hidden" multiple>
 </header>
 <main>
 <div id="drop">拖拽 .arrow / .parquet / .csv / .jsonl 文件到这里（文件仅在本机处理，不上传）</div>
 <div id="meta" class="hidden"></div>
 <div id="toolbar" class="hidden">
-  <input type="text" id="q" placeholder="搜索（当前页全列 / 指定列）">
+  <input type="text" id="q" placeholder="搜索关键字…">
   <select id="qcol"><option value="">全部列</option></select>
-  <button onclick="search()">搜索</button>
+  <button class="pri" onclick="search()">搜索</button>
   <button onclick="exportAs('csv')">导出 CSV</button>
   <button onclick="exportAs('jsonl')">导出 JSONL</button>
   <button onclick="exportAs('json')">导出 JSON</button>
 </div>
-<div id="schema" class="hidden"><table id="schematbl"></table></div>
+<details id="schema" class="hidden"><summary>Schema（列定义）</summary><table id="schematbl"></table></details>
 <div id="gridwrap" class="hidden"><table id="grid"></table></div>
-<div id="pager" class="hidden"><button onclick="go(-1)">上一页</button><span id="pginfo"></span><button onclick="go(1)">下一页</button>
+<div id="pager" class="hidden"><button onclick="go(-1)">‹ 上一页</button><span id="pginfo"></span><button onclick="go(1)">下一页 ›</button>
 <select id="psize" onchange="state.offset=0;load()"><option>50</option><option selected>100</option><option>200</option><option>500</option></select><span>行/页</span></div>
 <div id="err" class="err"></div>
 </main>
-<div id="modal" class="hidden" onclick="if(event.target===this)this.classList.add('hidden')"><div class="box"><pre id="modalbody"></pre></div></div>
+<div id="modal" class="hidden"><div class="box"><div class="mhead"><span id="mtitle"></span><button class="x" onclick="closeModal()">关闭 Esc</button></div><div class="mbody" id="modalbody"></div></div></div>
 <script>
 const state={sid:null,offset:0,total:0,cols:[],q:'',col:''};
 const MAX_CELL=300;
@@ -379,10 +401,10 @@ function handle(d){
   showErr('');
   state.sid=d.sid;state.offset=0;state.cols=d.columns;state.q='';document.getElementById('q').value='';
   const m=document.getElementById('meta');m.classList.remove('hidden');
-  m.innerHTML=`<span>📄 <b>${esc(d.path)}</b></span><span>行数 <b>${d.rows.toLocaleString()}</b></span><span>列数 <b>${d.columns.length}</b></span><span>内存 <b>${d.memory_mb} MB</b></span>`;
+  m.innerHTML=`<span class="chip path">📄 <b>${esc(d.path)}</b></span><span class="chip">行数 <b>${d.rows.toLocaleString()}</b></span><span class="chip">列数 <b>${d.columns.length}</b></span><span class="chip">内存 <b>${d.memory_mb} MB</b></span>`;
   const sel=document.getElementById('qcol');sel.innerHTML='<option value="">全部列</option>'+d.columns.map((c,i)=>`<option value="${esc(c.name)}">${i+1}. ${esc(c.name)}</option>`).join('');
   const st=document.getElementById('schematbl');
-  st.innerHTML='<tr><th>#</th><th>列名</th><th>类型</th><th>空值</th></tr>'+d.columns.map((c,i)=>`<tr><td>${i}</td><td>${esc(c.name)}</td><td>${esc(c.type)}</td><td>${c.nulls}</td></tr>`).join('');
+  st.innerHTML='<thead><tr><th>#</th><th>列名</th><th>类型</th><th>空值</th></tr></thead><tbody>'+d.columns.map((c,i)=>`<tr><td>${i}</td><td>${esc(c.name)}</td><td><span class="badge">${esc(c.type)}</span></td><td>${c.nulls}</td></tr>`).join('')+'</tbody>';
   document.getElementById('schema').classList.remove('hidden');
   document.getElementById('toolbar').classList.remove('hidden');
   document.getElementById('drop').classList.add('hidden');
@@ -400,10 +422,11 @@ async function load(){
   if(d.error){showErr(d.error);return}
   state.total=d.total;
   const cols=state.cols;
-  let html='<tr><th class="rownum">#</th>'+cols.map((c,i)=>`<th title="${esc(c.name)} · ${esc(c.type)}" onclick="cellModal(${i},-1)">${esc(c.name)}</th>`).join('')+'</tr>';
+  let html='<thead><tr><th class="rownum">#</th>'+cols.map((c,i)=>`<th title="${esc(c.name)} · ${esc(c.type)}">${esc(c.name)}</th>`).join('')+'</tr></thead><tbody>';
   d.rows.forEach((row,ri)=>{html+='<tr><td class="rownum">'+(state.offset+ri+1)+'</td>'+row.map((v,ci)=>{
     const s=esc(v);const tr=s.length>MAX_CELL;
-    return `<td title="点击展开" onclick="cellModal(${ci},${ri})">${tr?s.slice(0,MAX_CELL)+'…':s}</td>`}).join('')+'</tr>'});
+    return `<td title="点击查看整行" onclick="rowModal(${ci},${ri})">${tr?s.slice(0,MAX_CELL)+'…':s}</td>`}).join('')+'</tr>'});
+  html+='</tbody>';
   const g=document.getElementById('grid');g.innerHTML=html;
   document.getElementById('gridwrap').classList.remove('hidden');
   document.getElementById('pager').classList.remove('hidden');
@@ -412,16 +435,17 @@ async function load(){
   window._rows=d.rows;
   }catch(e){showErr('加载数据失败: '+e)}
 }
-async function cellModal(ci,ri){
-  let v;
-  if(ri<0){v=state.cols[ci].name+'  ·  '+state.cols[ci].type;showModal(v);return}
-  if(state.q){
-    const r=await fetch(`/api/cell?sid=${state.sid}&offset=${state.offset}&row=${ri}&col=${ci}`);
-    v=(await r.json()).value;
-  }else v=window._rows[ri][ci];
-  showModal(v==null?'∅':String(v));
+function rowModal(ci,ri){
+  if(ri<0)return;
+  const row=window._rows[ri];
+  document.getElementById('mtitle').textContent='第 '+(state.offset+ri+1)+' 行 · 完整内容';
+  document.getElementById('modalbody').innerHTML=state.cols.map((c,i)=>
+    `<div class="field"><div class="fname">${esc(c.name)} <span class="badge">${esc(c.type)}</span></div><div class="fval">${esc(row[i]==null?'∅':String(row[i]))}</div></div>`).join('');
+  document.getElementById('modal').classList.remove('hidden');
 }
-function showModal(t){document.getElementById('modalbody').textContent=t;document.getElementById('modal').classList.remove('hidden')}
+function closeModal(){document.getElementById('modal').classList.add('hidden')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 function exportAs(fmt){location.href=`/api/export?sid=${state.sid}&fmt=${fmt}`}
 </script></body></html>
 '''
