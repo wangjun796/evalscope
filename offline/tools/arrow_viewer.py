@@ -355,6 +355,7 @@ td.rownum,th.rownum{width:44px;min-width:44px;color:var(--mut);text-align:right;
 <div id="modal" class="hidden" onclick="if(event.target===this)this.classList.add('hidden')"><div class="box"><pre id="modalbody"></pre></div></div>
 <script>
 const state={sid:null,offset:0,total:0,cols:[],q:'',col:''};
+const MAX_CELL=300;
 function esc(s){if(s==null)return '∅';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function showErr(t){document.getElementById('err').textContent=t}
 async function openPath(){
@@ -418,7 +419,7 @@ async function cellModal(ci,ri){
     const r=await fetch(`/api/cell?sid=${state.sid}&offset=${state.offset}&row=${ri}&col=${ci}`);
     v=(await r.json()).value;
   }else v=window._rows[ri][ci];
-  showModal(esc(v));
+  showModal(v==null?'∅':String(v));
 }
 function showModal(t){document.getElementById('modalbody').textContent=t;document.getElementById('modal').classList.remove('hidden')}
 function exportAs(fmt){location.href=`/api/export?sid=${state.sid}&fmt=${fmt}`}
