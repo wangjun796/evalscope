@@ -316,9 +316,10 @@ main{padding:16px 20px}
 #meta b{color:var(--tx)}
 #schema{background:var(--card);border:1px solid var(--bd);border-radius:10px;margin-bottom:14px;overflow:auto}
 table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap;max-width:420px;overflow:hidden;text-overflow:ellipsis}
-th{background:var(--card);position:sticky;top:0;font-weight:600;cursor:pointer;user-select:none}
-td{font-family:var(--mono)}td.tr{color:var(--mut)}
+th,td{padding:6px 10px;border-bottom:1px solid var(--bd);text-align:left}
+th{background:var(--card);position:sticky;top:0;font-weight:600;cursor:pointer;user-select:none;white-space:nowrap;z-index:2}
+td{font-family:var(--mono);white-space:normal;word-break:break-word;vertical-align:top;max-width:520px;line-height:1.5}
+td.rownum,th.rownum{width:44px;min-width:44px;color:var(--mut);text-align:right;position:sticky;left:0;background:var(--card);font-family:var(--font-sans)}
 #gridwrap{background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:auto;max-height:calc(100vh - 260px)}
 #pager{display:flex;gap:8px;align-items:center;margin-top:10px;color:var(--mut);font-size:13px}
 #toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
@@ -354,12 +355,12 @@ td{font-family:var(--mono)}td.tr{color:var(--mut)}
 <div id="modal" class="hidden" onclick="if(event.target===this)this.classList.add('hidden')"><div class="box"><pre id="modalbody"></pre></div></div>
 <script>
 const state={sid:null,offset:0,total:0,cols:[],q:'',col:''};
-function esc(s){return (s==null?'∅':String(s))}
+function esc(s){if(s==null)return '∅';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function showErr(t){document.getElementById('err').textContent=t}
 async function openPath(){
   const p=document.getElementById('path').value.trim();
   if(!p)return;
-  const r=await fetch('/api/open?path='+encodeURIComponent(p));
-  handle(await r.json());
+  try{const r=await fetch('/api/open?path='+encodeURIComponent(p));handle(await r.json())}catch(e){showErr('打开失败: '+e)}
 }
 document.getElementById('file').addEventListener('change',e=>uploadFiles(e.target.files));
 const drop=document.getElementById('drop');
@@ -370,16 +371,15 @@ async function uploadFiles(files){
   if(!files||!files.length)return;
   const fd=new FormData();
   for(const f of files)fd.append('f'+files.length+Math.random(),f);
-  const r=await fetch('/api/upload',{method:'POST',body:fd});
-  handle(await r.json());
+  try{const r=await fetch('/api/upload',{method:'POST',body:fd});handle(await r.json())}catch(e){showErr('上传失败: '+e)}
 }
 function handle(d){
-  if(d.error){document.getElementById('err').textContent=d.error;return}
-  document.getElementById('err').textContent='';
+  if(d.error){showErr(d.error);return}
+  showErr('');
   state.sid=d.sid;state.offset=0;state.cols=d.columns;state.q='';document.getElementById('q').value='';
   const m=document.getElementById('meta');m.classList.remove('hidden');
-  m.innerHTML=`<span>📄 <b>${d.path}</b></span><span>行数 <b>${d.rows.toLocaleString()}</b></span><span>列数 <b>${d.columns.length}</b></span><span>内存 <b>${d.memory_mb} MB</b></span>`;
-  const sel=document.getElementById('qcol');sel.innerHTML='<option value="">全部列</option>'+d.columns.map((c,i)=>`<option value="${c.name}">${i+1}. ${c.name}</option>`).join('');
+  m.innerHTML=`<span>📄 <b>${esc(d.path)}</b></span><span>行数 <b>${d.rows.toLocaleString()}</b></span><span>列数 <b>${d.columns.length}</b></span><span>内存 <b>${d.memory_mb} MB</b></span>`;
+  const sel=document.getElementById('qcol');sel.innerHTML='<option value="">全部列</option>'+d.columns.map((c,i)=>`<option value="${esc(c.name)}">${i+1}. ${esc(c.name)}</option>`).join('');
   const st=document.getElementById('schematbl');
   st.innerHTML='<tr><th>#</th><th>列名</th><th>类型</th><th>空值</th></tr>'+d.columns.map((c,i)=>`<tr><td>${i}</td><td>${esc(c.name)}</td><td>${esc(c.type)}</td><td>${c.nulls}</td></tr>`).join('');
   document.getElementById('schema').classList.remove('hidden');
@@ -393,21 +393,23 @@ document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')s
 async function load(){
   if(!state.sid)return;
   const ps=+document.getElementById('psize').value;
+  try{
   const r=await fetch(`/api/rows?sid=${state.sid}&offset=${state.offset}&limit=${ps}&q=${encodeURIComponent(state.q)}&col=${encodeURIComponent(state.col)}`);
   const d=await r.json();
-  if(d.error){document.getElementById('err').textContent=d.error;return}
+  if(d.error){showErr(d.error);return}
   state.total=d.total;
   const cols=state.cols;
-  let html='<tr>'+cols.map((c,i)=>`<th title="${esc(c.name)} · ${esc(c.type)}" onclick="cellModal(${i},-1)">${esc(c.name)}</th>`).join('')+'</tr>';
-  d.rows.forEach((row,ri)=>{html+='<tr>'+row.map((v,ci)=>{
+  let html='<tr><th class="rownum">#</th>'+cols.map((c,i)=>`<th title="${esc(c.name)} · ${esc(c.type)}" onclick="cellModal(${i},-1)">${esc(c.name)}</th>`).join('')+'</tr>';
+  d.rows.forEach((row,ri)=>{html+='<tr><td class="rownum">'+(state.offset+ri+1)+'</td>'+row.map((v,ci)=>{
     const s=esc(v);const tr=s.length>MAX_CELL;
-    return `<td class="${tr?'tr':''}" title="点击展开" onclick="cellModal(${ci},${ri})">${tr?s.slice(0,MAX_CELL)+'…':s}</td>`}).join('')+'</tr>'});
+    return `<td title="点击展开" onclick="cellModal(${ci},${ri})">${tr?s.slice(0,MAX_CELL)+'…':s}</td>`}).join('')+'</tr>'});
   const g=document.getElementById('grid');g.innerHTML=html;
   document.getElementById('gridwrap').classList.remove('hidden');
   document.getElementById('pager').classList.remove('hidden');
   const from=state.total?state.offset+1:0;
   document.getElementById('pginfo').textContent=`${from} - ${Math.min(state.offset+ps,state.total)} / ${state.total.toLocaleString()}${state.q?'（筛选后）':''}`;
   window._rows=d.rows;
+  }catch(e){showErr('加载数据失败: '+e)}
 }
 async function cellModal(ci,ri){
   let v;
