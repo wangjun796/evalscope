@@ -8,6 +8,7 @@
 | --- | --- |
 | `offline/wheels/` | 全部 Python 依赖的 wheel/sdist（win_amd64 + cp311，含 evalscope 本体 wheel，已内置 Web 面板前端） |
 | `offline/datasets/` | 预生成的数据集处理后缓存（gsm8k、mmlu、ceval、cmmlu、humaneval、truthful_qa、agieval），目录名含内容哈希，**不要改名或移动内部文件** |
+| `offline/tokenizer/qwen3.8-27b/` | Qwen3.8-27B tokenizer 全套文件（tokenizer.json、tokenizer_config.json、vocab.json、merges.txt、chat_template.jinja），供 perf 压测计数 token 使用 |
 | `offline/install_windows.bat` | Windows 一键离线安装脚本 |
 | `offline/example_eval_vllm.yaml` | 评测配置示例 |
 
@@ -59,11 +60,11 @@ evalscope eval --eval-type openai_api --api-url http://<ASCEND_IP>:8000/v1/chat/
 
 ## 4. 压测（evalscope perf）
 
-perf 统计 token 需要本地 tokenizer。请在昇腾服务器上拷贝模型目录中的 `tokenizer.json`、`tokenizer_config.json`、`vocab` 等文件到内网机器，然后：
+perf 统计 token 需要本地 tokenizer，已随包提供（`offline/tokenizer/qwen3.8-27b/`，来自 ModelScope 官方仓库，与服务器部署的官方原版等价；若服务器跑的是改过词表/chat template 的微调版，仍需从服务器拷贝）：
 
 ```bash
 evalscope perf --url http://<ASCEND_IP>:8000/v1/completions --model qwen3.8 \
-  --api openai --tokenizer-path D:\models\qwen3.8-tokenizer \
+  --api openai --tokenizer-path offline/tokenizer/qwen3.8-27b \
   --number 50 --parallel 8
 ```
 
