@@ -6,8 +6,8 @@
 
 把本分支的两个分卷下载到同一目录（GitHub 页面可逐个点击 Download，或整分支 zip）：
 
-- `evalscope-offline.7z.001`
-- `evalscope-offline.7z.002`
+- `evalscope-offline.7z.001`（90MB）
+- `evalscope-offline.7z.002`（71MB）
 
 ## 解压
 
@@ -27,4 +27,4 @@
 2. `.venv\Scripts\activate`
 3. 修改 `example_eval_vllm.yaml` 指向昇腾 vLLM 地址后发起评测
 
-包内容：全部 win_amd64/cp311 依赖 wheel（含 evalscope 本体与 Web 面板）、gsm8k + mmlu 数据集缓存、安装脚本与使用说明。
+包内容：全部 win_amd64/cp311 依赖 wheel（含 evalscope 本体与 Web 面板）、数据集缓存（gsm8k、mmlu、ceval、cmmlu、humaneval、truthful_qa、agieval）、Qwen3.8-27B tokenizer 全套文件（perf 压测用）、安装脚本与使用说明。
